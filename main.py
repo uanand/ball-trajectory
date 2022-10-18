@@ -11,6 +11,8 @@ from matplotlib.patches import Circle
 plt.style.use('uanand')
 
 import trajectory
+import utils
+import plot
 
 def inch2m(x):
     return x*0.0254;
@@ -22,18 +24,36 @@ def inch2m(x):
 # X-AXIS IS TOWARDS THE LEFT OF HOME PLATE
 # Y-AXIS IS FROM THE HOME PLATE TO THE PITCHER
 # Z-AXIS IS VERTICALLY UP
-x = 0
-y = 18.6
-z = 1
-v_x = 0
-v_y = -35
-v_z = 2
+totalTime = 1
+fps = 220
+numPitches = 1000
+probHit = 0.8
 
-w = 1800
-theta = 0
-phi = 270
+for i in range(1000):
+    x_lim,y_lim,z_lim,v_x_lim,v_y_lim,v_z_lim,w_lim,theta_lim,phi_lim = utils.defPitchParametersLimit()
+    x,y,z,v_x,v_y,v_z,w,theta,phi = utils.randomPitchParameters(x_lim,y_lim,z_lim,v_x_lim,v_y_lim,v_z_lim,w_lim,theta_lim,phi_lim)
+    pitch = trajectory.pitch(x,y,z,v_x,v_y,v_z,w,theta,phi,totalTime,fps,mode='gravity+drag+magnus')
+    
+    if (pitch.status=='strike'):
+        if (numpy.random.rand()<=0.8):
+            pitch_hit = trajectory.pitch_hit(x,y,z,v_x,v_y,v_z,w,theta,phi,totalTime,fps,mode='gravity+drag+magnus')
+        
+        
+        
+        
+    # plot.plotTrajectory(throw.time,throw.x,throw.y,throw.z)
+# x = 0
+# y = 18.4
+# z = 1
+# v_x = 0
+# v_y = -35
+# v_z = 2
 
-hitting = True
+# w = 1800
+# theta = 0
+# phi = 270
+
+# hitting = True
 # THETA AND PHI CORRESPOND TO THE CONVENTIONAL SPHERICAL COORDINATE
 # SYSTEM USED IN MATHEMATICS. POLAR ANGLE "PHI" (0,360) IS FROM THE Z-AXIS
 # AND AZIMUTHAL ANGLE "THETA" (0,180) IS FROM THE X-AXIS.
@@ -43,7 +63,8 @@ hitting = True
 
 ############################################################
 # SIMULATE A PITCH
-realThrow = trajectory.pitch(x,y,z,v_x,v_y,v_z,w,theta,phi,mode='gravity+drag+magnus')
+# realThrow = trajectory.pitch(x,y,z,v_x,v_y,v_z,w,theta,phi,totalTime,fps,mode='gravity+drag+magnus')
+# print (realThrow,status)
 # idealThrow = trajectory.pitch(x,y,z,v_x,v_y,v_z,w,theta,phi,mode='gravity')
 ############################################################
 
